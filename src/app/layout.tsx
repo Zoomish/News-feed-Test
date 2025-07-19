@@ -4,6 +4,7 @@ import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { Provider } from "react-redux";
+import "./globals.css";
 
 export const metadata: Metadata = {
     title: "News Feed",
