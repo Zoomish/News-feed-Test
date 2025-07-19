@@ -35,7 +35,7 @@ export const HeaderComponent: React.FC = () => {
     };
 
     return (
-        <Flex justify="center" className="my-4">
+        <Flex justify="center" style={{ marginTop: 16 }}>
             <Input
                 placeholder="Search posts"
                 className="max-w-[800px]"

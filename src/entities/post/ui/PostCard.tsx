@@ -18,8 +18,14 @@ export const PostCard: React.FC<Props> = ({ post }) => {
     const searchTerm = useSelector((state: RootState) => state.search.term);
     const searchType = useSelector((state: RootState) => state.search.type);
 
-    const onTagClick = (tag: string) => {
-        dispatch(setSearchTerm({ term: tag, type: "tag" }));
+    const onTagClick = (tag: string, isActiveTag: boolean) => {
+        dispatch(
+            setSearchTerm(
+                isActiveTag
+                    ? { term: "", type: "search" }
+                    : { term: tag, type: "tag" },
+            ),
+        );
     };
 
     return (
@@ -34,7 +40,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
                                 key={tag}
                                 className="cursor-pointer"
                                 color={isActiveTag ? "purple" : "blue"}
-                                onClick={() => onTagClick(tag)}
+                                onClick={() => onTagClick(tag, isActiveTag)}
                             >
                                 {tag}
                             </Tag>
