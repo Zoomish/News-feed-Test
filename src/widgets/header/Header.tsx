@@ -1,5 +1,4 @@
 "use client";
-
 import { setSearchTerm } from "@/features/search/model/searchSlice";
 import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
 import { Input } from "antd";

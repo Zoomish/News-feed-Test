@@ -3,7 +3,7 @@
 import { RootState } from "@/app/store";
 import { appendPosts, setPosts } from "@/entities/post/model/postsSlice";
 import { PostCard } from "@/entities/post/ui/PostCard";
-import { $axios } from "@/shared/api/axios";
+import { usePostsQuery } from "@/shared/api/queries/usePostsQuery";
 import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
 import { Empty, Flex, Spin } from "antd";
@@ -17,35 +17,29 @@ export const PostsInfiniteList = () => {
     const searchTerm = useSelector((state: RootState) => state.search.term);
     const posts = useSelector((state: RootState) => state.posts.posts);
     const total = useSelector((state: RootState) => state.posts.total);
+
     const [page, setPage] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const fetchPosts = async () => {
-        setIsLoading(true);
-        const skip = page * LIMIT;
-        const endpoint = searchTerm
-            ? `/posts/search?q=${encodeURIComponent(searchTerm)}`
-            : `/posts?limit=${LIMIT}&skip=${skip}`;
-        const { data } = await $axios.get(endpoint);
-        if (page === 0) {
-            dispatch(setPosts({ posts: data.posts, total: data.total }));
-        } else {
-            dispatch(appendPosts({ posts: data.posts }));
-        }
-
-        setIsLoading(false);
-    };
+    const { data, isLoading } = usePostsQuery({
+        page,
+        limit: LIMIT,
+        searchTerm,
+    });
 
     useEffect(() => {
         setPage(0);
     }, [searchTerm]);
 
     useEffect(() => {
-        fetchPosts();
-    }, [page, searchTerm]);
+        if (data) {
+            if (page === 0) {
+                dispatch(setPosts({ posts: data.posts, total: data.total }));
+            } else {
+                dispatch(appendPosts({ posts: data.posts }));
+            }
+        }
+    }, [data, page, dispatch]);
 
     const hasMore = posts.length < total;
-
     const lastRef = useInfinityScroll({
         hasMore,
         isLoading,
@@ -53,7 +47,7 @@ export const PostsInfiniteList = () => {
     });
 
     return (
-        <Flex vertical wrap={false} gap={"small"} className="max-w-[800px]">
+        <Flex vertical wrap={false} gap="small" className="max-w-[800px]">
             {posts.length > 0 ? (
                 posts.map((post, index) => (
                     <div
