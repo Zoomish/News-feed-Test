@@ -1,5 +1,3 @@
-// src/entities/post/ui/PostCard.tsx
-
 import { Post } from "@/entities/post/types";
 
 type Props = {

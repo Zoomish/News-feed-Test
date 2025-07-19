@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useGetPostsQuery } from "@/entities/post/model/postApi";
+import { Post } from "@/entities/post/types";
 import { PostCard } from "@/entities/post/ui/PostCard";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
-import { Post } from "@/entities/post/types";
+import { useEffect, useState } from "react";
 
 type Props = {
     initialPosts: Post[];
@@ -13,19 +13,25 @@ type Props = {
 
 export const PostsInfiniteList = ({ initialPosts, total }: Props) => {
     const LIMIT = 10;
-    const [page, setPage] = useState(1); // первая страница уже загружена
+
+    const [page, setPage] = useState(0);
     const [posts, setPosts] = useState<Post[]>(initialPosts);
 
-    const skip = page * LIMIT;
+    const skip = (page + 1) * LIMIT;
 
     const { data, isFetching } = useGetPostsQuery(
         { limit: LIMIT, skip },
-        { skip: !page },
+        { skip: page === 0 },
     );
 
     useEffect(() => {
         if (data?.posts?.length) {
-            setPosts((prev) => [...prev, ...data.posts]);
+            setPosts((prev) => {
+                const newPosts = data.posts.filter(
+                    (post) => !prev.find((p) => p.id === post.id),
+                );
+                return [...prev, ...newPosts];
+            });
         }
     }, [data]);
 
