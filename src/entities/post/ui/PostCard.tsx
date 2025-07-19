@@ -27,6 +27,29 @@ export const PostCard: React.FC<Props> = ({ post }) => {
             ),
         );
     };
+    function highlightText(text: string, highlight: string) {
+        if (!highlight.trim()) return text;
+
+        const regex = new RegExp(
+            `(${highlight.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+            "gi",
+        );
+        const parts = text.split(regex);
+
+        return (
+            <>
+                {parts.map((part, i) =>
+                    regex.test(part) ? (
+                        <mark key={i} style={{ backgroundColor: "yellow" }}>
+                            {part}
+                        </mark>
+                    ) : (
+                        part
+                    ),
+                )}
+            </>
+        );
+    }
 
     return (
         <Card
@@ -62,7 +85,9 @@ export const PostCard: React.FC<Props> = ({ post }) => {
                 </Flex>
             </Flex>
             <Title level={2} style={{ marginTop: 8 }}>
-                {post.title}
+                {searchType === "search"
+                    ? highlightText(post.title, searchTerm)
+                    : post.title}
             </Title>
             <Paragraph
                 ellipsis={{
@@ -70,7 +95,9 @@ export const PostCard: React.FC<Props> = ({ post }) => {
                     expandable: true,
                 }}
             >
-                {post.body}
+                {searchType === "search"
+                    ? highlightText(post.body, searchTerm)
+                    : post.body}
             </Paragraph>
             <Flex gap={8}>
                 <Statistic
