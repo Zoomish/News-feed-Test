@@ -41,7 +41,7 @@ export const HeaderComponent: React.FC = () => {
     };
 
     return (
-        <Flex justify="center" gap={8} style={{ marginTop: 16 }} className="!shadow-xl">
+        <Flex justify="center" gap={8} style={{ marginTop: 16 }}>
             {search.type === "tag" && (
                 <Tag
                     className="cursor-pointer flex items-center"
@@ -49,6 +49,7 @@ export const HeaderComponent: React.FC = () => {
                     onClick={setDefaultSearch}
                     closable
                     onClose={setDefaultSearch}
+                    style={{ boxShadow: "10px 5px 5px rgb(0 0 0 / 20%)" }}
                 >
                     {search.term}
                 </Tag>
@@ -60,6 +61,7 @@ export const HeaderComponent: React.FC = () => {
                 onChange={handleChange}
                 onClear={setDefaultSearch}
                 allowClear
+                style={{ boxShadow: "10px 5px 5px rgb(0 0 0 / 20%)" }}
             />
         </Flex>
     );

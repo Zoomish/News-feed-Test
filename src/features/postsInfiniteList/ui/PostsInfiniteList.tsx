@@ -32,8 +32,10 @@ export const PostsInfiniteList: React.FC<Props> = ({ initialPosts, total }) => {
     }, [searchTerm, searchType]);
 
     useEffect(() => {
-        dispatch(setPosts({ posts: initialPosts, total: total }));
-    }, [dispatch, initialPosts, total]);
+        if (page === 0 && searchTerm.length === 0) {
+            dispatch(setPosts({ posts: initialPosts, total: total }));
+        }
+    }, [dispatch, initialPosts, total, searchTerm, page]);
 
     const enabled = page >= 1 || searchTerm.length > 0;
 
