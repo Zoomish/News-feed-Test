@@ -42,27 +42,28 @@ export const HeaderComponent: React.FC = () => {
 
     return (
         <Flex justify="center" gap={8} style={{ marginTop: 16 }}>
-            {search.type === "tag" && (
-                <Tag
-                    className="cursor-pointer flex items-center"
-                    color="purple"
-                    onClick={setDefaultSearch}
-                    closable
-                    onClose={setDefaultSearch}
+            <Flex className="grow max-w-[800px]">
+                {search.type === "tag" && (
+                    <Tag
+                        className="cursor-pointer flex items-center"
+                        color="purple"
+                        onClick={setDefaultSearch}
+                        closable
+                        onClose={setDefaultSearch}
+                        style={{ boxShadow: "10px 5px 5px rgb(0 0 0 / 20%)" }}
+                    >
+                        {search.term}
+                    </Tag>
+                )}
+                <Input
+                    placeholder="Search posts"
+                    value={inputValue}
+                    onChange={handleChange}
+                    onClear={setDefaultSearch}
+                    allowClear
                     style={{ boxShadow: "10px 5px 5px rgb(0 0 0 / 20%)" }}
-                >
-                    {search.term}
-                </Tag>
-            )}
-            <Input
-                placeholder="Search posts"
-                className="max-w-[800px]"
-                value={inputValue}
-                onChange={handleChange}
-                onClear={setDefaultSearch}
-                allowClear
-                style={{ boxShadow: "10px 5px 5px rgb(0 0 0 / 20%)" }}
-            />
+                />
+            </Flex>
         </Flex>
     );
 };

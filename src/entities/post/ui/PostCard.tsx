@@ -29,9 +29,12 @@ export const PostCard: React.FC<Props> = ({ post }) => {
     };
 
     return (
-        <Card className="border rounded-2xl p-4 shadow-md hover:shadow-lg transition">
-            <Flex justify="space-between">
-                <Flex wrap gap={6}>
+        <Card className="relative">
+            <Flex gap={4} justify="center" wrap={false} align="center" className="absolute" style={{ top: '8px', right: '10px'}}>
+                <EyeOutlined /> {post.views}
+            </Flex>
+            <Flex style={{ marginTop: 8 }}>
+                <Flex wrap={false} gap={6}>
                     {post.tags.map((tag) => {
                         const isActiveTag =
                             searchType === "tag" && tag === searchTerm;
@@ -47,9 +50,6 @@ export const PostCard: React.FC<Props> = ({ post }) => {
                         );
                     })}
                 </Flex>
-                <span>
-                    <EyeOutlined /> {post.views}
-                </span>
             </Flex>
             <Title level={2} style={{ marginTop: 8 }}>
                 {post.title}
