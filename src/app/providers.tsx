@@ -1,5 +1,6 @@
 "use client";
 import { store } from "@/app/store";
+import { HeaderComponent } from "@/widgets/header/Header";
 import { App, Layout } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import { ReactNode } from "react";
@@ -10,8 +11,19 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
         <Provider store={store}>
             <App>
                 <Layout>
-                    <Header>Header</Header>
-                    <Content>{children}</Content>
+                    <Header
+                        style={{
+                            position: "fixed",
+                            zIndex: 1,
+                            width: "100%",
+                            backgroundColor: "transparent",
+                        }}
+                    >
+                        <HeaderComponent></HeaderComponent>
+                    </Header>
+                    <Content style={{ padding: "0 50px", marginTop: 64 }}>
+                        {children}
+                    </Content>
                 </Layout>
             </App>
         </Provider>

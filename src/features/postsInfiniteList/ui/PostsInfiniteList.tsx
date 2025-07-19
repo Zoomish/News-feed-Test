@@ -12,7 +12,10 @@ type Props = {
     total: number;
 };
 
-export const PostsInfiniteList = ({ initialPosts, total }: Props) => {
+export const PostsInfiniteList: React.FC<Props> = ({
+    initialPosts,
+    total,
+}: Props) => {
     const LIMIT = 10;
 
     const [page, setPage] = useState(0);

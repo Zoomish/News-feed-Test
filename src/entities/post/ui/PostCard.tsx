@@ -8,7 +8,7 @@ type Props = {
     post: Post;
 };
 
-export const PostCard = ({ post }: Props) => {
+export const PostCard: React.FC<Props> = ({ post }: Props) => {
     return (
         <Card className="border rounded-2xl p-4 shadow-md hover:shadow-lg transition">
             <Flex justify="space-between">
