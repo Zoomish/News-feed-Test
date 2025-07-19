@@ -1,55 +1,26 @@
 "use client";
 
-import { Input } from "antd";
-import { useEffect, useState } from "react";
-import { $axios } from "@/shared/api/axios";
+import { setSearchTerm } from "@/features/search/model/searchSlice";
 import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
-import {
-    setSearchResults,
-    clearSearchResults,
-} from "@/entities/post/model/searchSlice";
+import { Input } from "antd";
+import { debounce } from "lodash";
+import { useCallback } from "react";
 
-export const HeaderComponent: React.FC = () => {
-    const [query, setQuery] = useState("");
-    const [debouncedQuery, setDebouncedQuery] = useState("");
+export const HeaderComponent = () => {
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setDebouncedQuery(query.trim());
-        }, 400);
-
-        return () => clearTimeout(timeout);
-    }, [query]);
-
-    useEffect(() => {
-        const searchPosts = async () => {
-            if (!debouncedQuery) {
-                dispatch(clearSearchResults());
-                return;
-            }
-
-            try {
-                const response = await $axios.get("/posts/search", {
-                    params: { q: debouncedQuery },
-                });
-
-                dispatch(setSearchResults(response.data.posts || []));
-            } catch (error) {
-                console.error("Ошибка при поиске:", error);
-                dispatch(clearSearchResults());
-            }
-        };
-
-        searchPosts();
-    }, [debouncedQuery, dispatch]);
+    const debouncedSearch = useCallback(
+        debounce((value: string) => {
+            dispatch(setSearchTerm(value));
+        }, 400),
+        [],
+    );
 
     return (
-        <div className="p-4 bg-white shadow-md">
+        <div className="p-4 border-b">
             <Input
                 placeholder="Поиск постов..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => debouncedSearch(e.target.value)}
                 allowClear
             />
         </div>

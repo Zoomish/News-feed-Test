@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Post } from "../types";
 
 interface PostsState {
-    allPosts: Post[];
+    posts: Post[];
     total: number;
 }
 
 const initialState: PostsState = {
-    allPosts: [],
+    posts: [],
     total: 0,
 };
 
@@ -15,19 +15,22 @@ const postsSlice = createSlice({
     name: "posts",
     initialState,
     reducers: {
-        setAllPosts(
+        setPosts(
             state,
             action: PayloadAction<{ posts: Post[]; total: number }>,
         ) {
-            state.allPosts = [...state.allPosts, ...action.payload.posts];
+            state.posts = action.payload.posts;
             state.total = action.payload.total;
         },
-        clearAllPosts(state) {
-            state.allPosts = [];
+        appendPosts(state, action: PayloadAction<{ posts: Post[] }>) {
+            state.posts = [...state.posts, ...action.payload.posts];
+        },
+        clearPosts(state) {
+            state.posts = [];
             state.total = 0;
         },
     },
 });
 
-export const { setAllPosts, clearAllPosts } = postsSlice.actions;
+export const { setPosts, appendPosts, clearPosts } = postsSlice.actions;
 export default postsSlice.reducer;
