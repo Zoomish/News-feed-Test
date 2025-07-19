@@ -29,8 +29,18 @@ export const PostCard: React.FC<Props> = ({ post }) => {
     };
 
     return (
-        <Card className="relative">
-            <Flex gap={4} justify="center" wrap={false} align="center" className="absolute" style={{ top: '8px', right: '10px'}}>
+        <Card
+            className="relative hover:scale-105 transition-all duration-400"
+            style={{ boxShadow: "5px 2.5px 2.5px rgb(0 0 0 / 20%)" }}
+        >
+            <Flex
+                gap={4}
+                justify="center"
+                wrap={false}
+                align="center"
+                className="absolute"
+                style={{ top: "8px", right: "10px" }}
+            >
                 <EyeOutlined /> {post.views}
             </Flex>
             <Flex style={{ marginTop: 8 }}>
