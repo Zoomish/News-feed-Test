@@ -17,7 +17,7 @@ export const PostsInfiniteList = ({ initialPosts, total }: Props) => {
     const [page, setPage] = useState(0);
     const [posts, setPosts] = useState<Post[]>(initialPosts);
 
-    const skip = (page + 1) * LIMIT;
+    const skip = (page) * LIMIT;
 
     const { data, isFetching } = useGetPostsQuery(
         { limit: LIMIT, skip },
