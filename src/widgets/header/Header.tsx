@@ -1,7 +1,7 @@
 "use client";
 import { setSearchTerm } from "@/features/search/model/searchSlice";
 import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
-import { Input } from "antd";
+import { Flex, Input } from "antd";
 import { useRef } from "react";
 
 export const HeaderComponent = () => {
@@ -18,12 +18,14 @@ export const HeaderComponent = () => {
     };
 
     return (
-        <div className="max-w-[800px]">
-            <Input
-                placeholder="Поиск постов..."
-                onChange={(e) => handleSearch(e.target.value)}
-                allowClear
-            />
-        </div>
+        <Flex justify="center" className="mb-4">
+            <div className="max-w-[800px] w-full">
+                <Input
+                    placeholder="Поиск постов..."
+                    onChange={(e) => handleSearch(e.target.value)}
+                    allowClear
+                />
+            </div>
+        </Flex>
     );
 };
