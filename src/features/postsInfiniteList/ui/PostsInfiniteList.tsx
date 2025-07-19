@@ -8,7 +8,7 @@ import { usePostsQuery } from "@/shared/api/queries/usePostsQuery";
 import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
 import { Empty, Flex, Spin } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const LIMIT = 10;
@@ -29,51 +29,41 @@ export const PostsInfiniteList: React.FC<Props> = ({
     const total = useSelector((state: RootState) => state.posts.total);
 
     const [page, setPage] = useState(0);
-    const [skipInitial, setSkipInitial] = useState(true);
-    const initialLoadedRef = useRef(false);
 
     useEffect(() => {
-        if (!initialLoadedRef.current && initialPosts.length > 0) {
-            dispatch(setPosts({ posts: initialPosts, total: initialTotal }));
-            initialLoadedRef.current = true;
-            setSkipInitial(false);
-        }
-    }, [dispatch, initialPosts, initialTotal]);
+        dispatch(setPosts({ posts: initialPosts, total: initialTotal }));
+        setPage(1);
+    }, [dispatch, initialPosts, initialTotal, searchTerm, searchType]);
 
-    useEffect(() => {
-        setPage(0);
-        if (initialLoadedRef.current) {
-            setSkipInitial(false);
-        }
-    }, [searchTerm, searchType]);
-    console.log(searchType, searchTerm);
+    const enabled = page >= 1;
 
     const { data, isLoading } = usePostsQuery({
         page,
         limit: LIMIT,
         searchTerm,
         searchType,
-        enabled:
-            !skipInitial && !(searchType === "search" && searchTerm === ""),
+        enabled,
     });
 
     useEffect(() => {
         if (!data) return;
-        if (page === 0 && searchTerm === "") {
-            dispatch(setPosts({ posts: initialPosts, total: total }));
-        } else if (page === 0) {
-            dispatch(setPosts({ posts: data.posts, total: total }));
-        } else {
+        if (page === 1) {
+            dispatch(setPosts({ posts: data.posts, total: data.total }));
+        } else if (page > 1) {
             dispatch(appendPosts({ posts: data.posts }));
         }
-    }, [data, page, dispatch, initialPosts, total]);
+    }, [data, dispatch, page]);
 
     const hasMore = posts.length < total;
 
     const lastRef = useInfinityScroll({
         hasMore,
         isLoading,
-        onLoadMore: () => setPage((prev) => prev + 1),
+        onLoadMore: () => {
+            if (!isLoading && hasMore) {
+                setPage((prev) => prev + 1);
+            }
+        },
     });
 
     return (

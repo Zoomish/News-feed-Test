@@ -25,12 +25,8 @@ const postsSlice = createSlice({
         appendPosts(state, action: PayloadAction<{ posts: Post[] }>) {
             state.posts = [...state.posts, ...action.payload.posts];
         },
-        clearPosts(state) {
-            state.posts = [];
-            state.total = 0;
-        },
     },
 });
 
-export const { setPosts, appendPosts, clearPosts } = postsSlice.actions;
+export const { setPosts, appendPosts } = postsSlice.actions;
 export default postsSlice.reducer;
