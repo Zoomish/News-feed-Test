@@ -1,24 +1,33 @@
-"use client";
+// src/entities/post/ui/PostCard.tsx
 
-import { Post } from "../types";
+import { Post } from "@/entities/post/types";
 
-export const PostCard = ({ post }: { post: Post }) => {
+type Props = {
+    post: Post;
+};
+
+export const PostCard = ({ post }: Props) => {
     return (
-        <div className="border rounded-2xl p-4 mb-4 shadow-sm bg-white">
+        <div className="border rounded-2xl p-4 shadow-md hover:shadow-lg transition">
             <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-            <p className="text-gray-700 line-clamp-3">{post.body}</p>
-            <div className="flex flex-wrap gap-2 mt-3">
+            <p className="text-gray-700 line-clamp-3 mb-3">{post.body}</p>
+
+            <div className="flex flex-wrap gap-2 text-sm mb-3">
                 {post.tags.map((tag) => (
                     <span
                         key={tag}
-                        className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                        className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full"
                     >
                         #{tag}
                     </span>
                 ))}
             </div>
-            <div className="text-sm text-gray-500 mt-2">
-                ❤️ {post.reactions}
+
+            <div className="text-gray-600 text-sm flex justify-between">
+                <span>
+                    👍 {post.reactions.likes} | 👎 {post.reactions.dislikes}
+                </span>
+                <span>👁 {post.views}</span>
             </div>
         </div>
     );

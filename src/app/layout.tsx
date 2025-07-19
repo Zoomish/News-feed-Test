@@ -1,26 +1,20 @@
-import { store } from "@/app/store";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ConfigProvider } from "antd";
-import type { Metadata } from "next";
-import { ReactNode } from "react";
-import { Provider } from "react-redux";
 import "./globals.css";
+import { AppProviders } from "./providers";
 
-export const metadata: Metadata = {
+export const metadata = {
     title: "News Feed",
+    description: "Infinite scroll with Next.js",
 };
 
-const queryClient = new QueryClient();
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <html lang="en">
             <body>
-                <Provider store={store}>
-                    <QueryClientProvider client={queryClient}>
-                        <ConfigProvider>{children}</ConfigProvider>
-                    </QueryClientProvider>
-                </Provider>
+                <AppProviders>{children}</AppProviders>
             </body>
         </html>
     );
