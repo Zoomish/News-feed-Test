@@ -18,24 +18,24 @@ type Props = {
     total: number;
 };
 
-export const PostsInfiniteList: React.FC<Props> = ({
-    initialPosts,
-    total: initialTotal,
-}) => {
+export const PostsInfiniteList: React.FC<Props> = ({ initialPosts, total }) => {
     const dispatch = useAppDispatch();
     const searchTerm = useSelector((state: RootState) => state.search.term);
     const searchType = useSelector((state: RootState) => state.search.type);
     const posts = useSelector((state: RootState) => state.posts.posts);
-    const total = useSelector((state: RootState) => state.posts.total);
 
     const [page, setPage] = useState(0);
 
     useEffect(() => {
-        dispatch(setPosts({ posts: initialPosts, total: initialTotal }));
-        setPage(1);
-    }, [dispatch, initialPosts, initialTotal, searchTerm, searchType]);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setPage(0);
+    }, [searchTerm, searchType]);
 
-    const enabled = page >= 1;
+    useEffect(() => {
+        dispatch(setPosts({ posts: initialPosts, total: total }));
+    }, [dispatch, initialPosts, total]);
+
+    const enabled = page >= 1 || searchTerm.length > 0;
 
     const { data, isLoading } = usePostsQuery({
         page,

@@ -21,6 +21,7 @@ export const HeaderComponent: React.FC = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             if (inputValue.trim() !== "") {
+                window.scrollTo({ top: 0, behavior: "smooth" });
                 dispatch(
                     setSearchTerm({ term: inputValue.trim(), type: "search" }),
                 );
@@ -35,6 +36,7 @@ export const HeaderComponent: React.FC = () => {
     };
 
     const setDefaultSearch = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         dispatch(setSearchTerm({ term: "", type: "search" }));
     };
 
