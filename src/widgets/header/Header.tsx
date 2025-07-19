@@ -1,31 +1,30 @@
 "use client";
 import { setSearchTerm } from "@/features/search/model/searchSlice";
-import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
 import { Flex, Input } from "antd";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-export const HeaderComponent = () => {
-    const dispatch = useAppDispatch();
-    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+export const HeaderComponent: React.FC = () => {
+    const dispatch = useDispatch();
+    const [inputValue, setInputValue] = useState("");
 
-    const handleSearch = (value: string) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-        timeoutRef.current = setTimeout(() => {
-            dispatch(setSearchTerm(value));
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            dispatch(setSearchTerm({ term: inputValue, type: "search" }));
         }, 400);
-    };
+
+        return () => clearTimeout(timer);
+    }, [inputValue, dispatch]);
 
     return (
-        <Flex justify="center" className="mb-4">
-            <div className="max-w-[800px] w-full">
-                <Input
-                    placeholder="Поиск постов..."
-                    onChange={(e) => handleSearch(e.target.value)}
-                    allowClear
-                />
-            </div>
+        <Flex justify="center" className="my-4">
+            <Input
+                placeholder="Search posts"
+                className="max-w-[800px]"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                allowClear
+            />
         </Flex>
     );
 };

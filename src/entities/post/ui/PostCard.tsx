@@ -1,14 +1,23 @@
 import { Post } from "@/entities/post/types";
+import { setSearchTerm } from "@/features/search/model/searchSlice";
 import { DislikeOutlined, EyeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Card, Flex, Statistic, Tag, Typography } from "antd";
 import Title from "antd/es/typography/Title";
+import { useDispatch } from "react-redux";
+
 const { Paragraph } = Typography;
 
 type Props = {
     post: Post;
 };
 
-export const PostCard: React.FC<Props> = ({ post }: Props) => {
+export const PostCard: React.FC<Props> = ({ post }) => {
+    const dispatch = useDispatch();
+
+    const onTagClick = (tag: string) => {
+        dispatch(setSearchTerm({ term: tag, type: "tag" }));
+    };
+
     return (
         <Card className="border rounded-2xl p-4 shadow-md hover:shadow-lg transition">
             <Flex justify="space-between">
@@ -16,7 +25,8 @@ export const PostCard: React.FC<Props> = ({ post }: Props) => {
                     {post.tags.map((tag) => (
                         <Tag
                             key={tag}
-                            className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full"
+                            className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full cursor-pointer"
+                            onClick={() => onTagClick(tag)}
                         >
                             {tag}
                         </Tag>
