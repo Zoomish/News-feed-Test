@@ -4,6 +4,7 @@ import { useGetPostsQuery } from "@/entities/post/model/postApi";
 import { Post } from "@/entities/post/types";
 import { PostCard } from "@/entities/post/ui/PostCard";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
+import { Flex } from "antd";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -17,7 +18,7 @@ export const PostsInfiniteList = ({ initialPosts, total }: Props) => {
     const [page, setPage] = useState(0);
     const [posts, setPosts] = useState<Post[]>(initialPosts);
 
-    const skip = (page) * LIMIT;
+    const skip = page * LIMIT;
 
     const { data, isFetching } = useGetPostsQuery(
         { limit: LIMIT, skip },
@@ -44,7 +45,7 @@ export const PostsInfiniteList = ({ initialPosts, total }: Props) => {
     });
 
     return (
-        <div className="space-y-4">
+        <Flex vertical wrap={false} gap={"small"} className="max-w-[800px]">
             {posts.map((post, index) => (
                 <div
                     key={post.id}
@@ -56,6 +57,6 @@ export const PostsInfiniteList = ({ initialPosts, total }: Props) => {
             {isFetching && (
                 <div className="text-gray-500 text-center">Загрузка...</div>
             )}
-        </div>
+        </Flex>
     );
 };
