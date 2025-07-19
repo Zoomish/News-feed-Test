@@ -42,7 +42,7 @@ export const HeaderComponent: React.FC = () => {
         <Flex justify="center" gap={8} style={{ marginTop: 16 }}>
             {search.type === "tag" && (
                 <Tag
-                    className="cursor-pointer flex gap-5 items-center"
+                    className="cursor-pointer flex items-center"
                     color="purple"
                     onClick={setDefaultSearch}
                     closable
