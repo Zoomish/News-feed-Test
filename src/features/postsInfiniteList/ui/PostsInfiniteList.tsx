@@ -1,11 +1,14 @@
 "use client";
 
+import { RootState } from "@/app/store";
 import { useGetPostsQuery } from "@/entities/post/model/postApi";
 import { Post } from "@/entities/post/types";
 import { PostCard } from "@/entities/post/ui/PostCard";
+import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
 import { Empty, Flex, Spin } from "antd";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 type Props = {
     initialPosts: Post[];
@@ -20,6 +23,11 @@ export const PostsInfiniteList: React.FC<Props> = ({
 
     const [page, setPage] = useState(0);
     const [posts, setPosts] = useState<Post[]>(initialPosts);
+    const dispatch = useAppDispatch();
+    const searchResults = useSelector(
+        (state: RootState) => state.search.results,
+    );
+    const allPosts = useSelector((state: RootState) => state.posts.allPosts);
 
     const skip = page * LIMIT;
 
