@@ -18,11 +18,15 @@ type Props = {
     total: number;
 };
 
-export const PostsInfiniteList: React.FC<Props> = ({ initialPosts, total }) => {
+export const PostsInfiniteList: React.FC<Props> = ({
+    initialPosts,
+    total: initialTotal,
+}) => {
     const dispatch = useAppDispatch();
     const searchTerm = useSelector((state: RootState) => state.search.term);
     const searchType = useSelector((state: RootState) => state.search.type);
     const posts = useSelector((state: RootState) => state.posts.posts);
+    const total = useSelector((state: RootState) => state.posts.total);
 
     const [page, setPage] = useState(0);
 
@@ -33,9 +37,9 @@ export const PostsInfiniteList: React.FC<Props> = ({ initialPosts, total }) => {
 
     useEffect(() => {
         if (page === 0 && searchTerm.length === 0) {
-            dispatch(setPosts({ posts: initialPosts, total: total }));
+            dispatch(setPosts({ posts: initialPosts, total: initialTotal }));
         }
-    }, [dispatch, initialPosts, total, searchTerm, page]);
+    }, [dispatch, initialPosts, initialTotal, searchTerm, page]);
 
     const enabled = page >= 1 || searchTerm.length > 0;
 
@@ -56,7 +60,7 @@ export const PostsInfiniteList: React.FC<Props> = ({ initialPosts, total }) => {
         } else if (page > 1) {
             dispatch(appendPosts({ posts: data.posts }));
         }
-    }, [data, dispatch, page]);
+    }, [data, dispatch, page, searchTerm, posts]);
 
     const hasMore = posts.length < total;
 
