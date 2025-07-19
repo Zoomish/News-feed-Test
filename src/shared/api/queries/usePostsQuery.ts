@@ -7,8 +7,9 @@ type GetPostsResponse = { posts: Post[]; total: number };
 type UsePostsQueryParams = {
     page: number;
     limit: number;
-    searchTerm: string;
-    searchType: "search" | "tag";
+    searchTerm?: string;
+    searchType?: string;
+    enabled?: boolean;
 };
 
 export const usePostsQuery = ({
@@ -16,26 +17,20 @@ export const usePostsQuery = ({
     limit,
     searchTerm,
     searchType,
+    enabled = true,
 }: UsePostsQueryParams) => {
-    const skip = page * limit;
-
-    const fetchPosts = async (): Promise<GetPostsResponse> => {
-        let endpoint = "";
-
-        if (!searchTerm) {
-            endpoint = `/posts?limit=${limit}&skip=${skip}`;
-        } else if (searchType === "search") {
-            endpoint = `/posts/search?q=${encodeURIComponent(searchTerm)}`;
-        } else if (searchType === "tag") {
-            endpoint = `/posts/tag/${encodeURIComponent(searchTerm)}`;
-        }
-
-        const { data } = await $axios.get(endpoint);
-        return data;
-    };
+    const endpoint = searchTerm
+        ? `/posts/search?q=${encodeURIComponent(searchTerm)}`
+        : searchType
+        ? `/posts/tag/${searchType}`
+        : `/posts?limit=${limit}&skip=${page * limit}`;
 
     return useQuery<GetPostsResponse>({
         queryKey: ["posts", searchTerm, searchType, page],
-        queryFn: fetchPosts,
+        queryFn: async () => {
+            const { data } = await $axios.get(endpoint);
+            return data;
+        },
+        enabled, // используем enabled из параметров
     });
 };

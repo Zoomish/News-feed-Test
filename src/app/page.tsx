@@ -8,8 +8,8 @@ export default async function Home() {
     const data = res.data;
 
     return (
-        <main className="mx-auto p-4 flex justify-center">
+        <div className="mx-auto p-4 flex justify-center">
             <PostsInfiniteList initialPosts={data.posts} total={data.total} />
-        </main>
+        </div>
     );
 }

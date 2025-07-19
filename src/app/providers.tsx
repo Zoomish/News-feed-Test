@@ -13,8 +13,8 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
     return (
         <QueryClientProvider client={queryClient}>
             <Provider store={store}>
-                <App>
-                    <Layout>
+                <App className="min-h-screen">
+                    <Layout className="min-h-screen">
                         <Header
                             style={{
                                 position: "fixed",
@@ -25,7 +25,7 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
                         >
                             <HeaderComponent />
                         </Header>
-                        <Content style={{ padding: "0 50px", marginTop: 64 }}>
+                        <Content style={{ padding: "0 50px", marginTop: 64, minHeight: "100%" }}>
                             {children}
                         </Content>
                     </Layout>

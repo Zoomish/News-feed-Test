@@ -1,17 +1,27 @@
 "use client";
+
 import { RootState } from "@/app/store";
 import { appendPosts, setPosts } from "@/entities/post/model/postsSlice";
+import { Post } from "@/entities/post/types";
 import { PostCard } from "@/entities/post/ui/PostCard";
 import { usePostsQuery } from "@/shared/api/queries/usePostsQuery";
 import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
 import { Empty, Flex, Spin } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 const LIMIT = 10;
 
-export const PostsInfiniteList = () => {
+type Props = {
+    initialPosts: Post[];
+    total: number;
+};
+
+export const PostsInfiniteList: React.FC<Props> = ({
+    initialPosts,
+    total: initialTotal,
+}) => {
     const dispatch = useAppDispatch();
     const searchTerm = useSelector((state: RootState) => state.search.term);
     const searchType = useSelector((state: RootState) => state.search.type);
@@ -19,27 +29,40 @@ export const PostsInfiniteList = () => {
     const total = useSelector((state: RootState) => state.posts.total);
 
     const [page, setPage] = useState(0);
+    const [skipInitial, setSkipInitial] = useState(true);
+    const initialLoadedRef = useRef(false);
+
+    useEffect(() => {
+        if (!initialLoadedRef.current && initialPosts.length > 0) {
+            dispatch(setPosts({ posts: initialPosts, total: initialTotal }));
+            initialLoadedRef.current = true;
+            setSkipInitial(false);
+        }
+    }, [dispatch, initialPosts, initialTotal]);
+
+    useEffect(() => {
+        setPage(0);
+        if (initialLoadedRef.current) {
+            setSkipInitial(false);
+        }
+    }, [searchTerm, searchType]);
 
     const { data, isLoading } = usePostsQuery({
         page,
         limit: LIMIT,
         searchTerm,
         searchType,
+        enabled: !skipInitial,
     });
 
     useEffect(() => {
-        setPage(0);
-    }, [searchTerm, searchType]);
-
-    useEffect(() => {
-        if (data) {
-            if (page === 0) {
-                dispatch(setPosts({ posts: data.posts, total: data.total }));
-            } else {
-                dispatch(appendPosts({ posts: data.posts }));
-            }
+        if (!data) return;
+        if (page === 0) {
+            dispatch(setPosts({ posts: initialPosts, total: total }));
+        } else {
+            dispatch(appendPosts({ posts: data.posts }));
         }
-    }, [data, page, dispatch]);
+    }, [data, page, dispatch, initialPosts, total]);
 
     const hasMore = posts.length < total;
 
@@ -61,7 +84,7 @@ export const PostsInfiniteList = () => {
                     </div>
                 ))
             ) : (
-                <Empty />
+                <Empty className="mt-[30%]" />
             )}
             {isLoading && <Spin size="large" />}
         </Flex>
