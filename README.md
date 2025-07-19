@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔍 Infinite Posts Feed App
 
-## Getting Started
+Интерактивное SPA-приложение с бесконечной прокруткой постов и возможностью поиска по тексту или тегам. Реализовано с использованием **Next.js**, **Redux Toolkit**, **React Query**, **Ant Design**, **Tailwind** и архитектуры **FSD (Feature-Sliced Design)**. Я использовал технологии и архитектуру, которые мне больше всего подходят и с которыми я лучше всего знаком
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Технологии
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Стек              | Описание                                                                |
+|------------------ |-------------------------------------------------------------------------|
+| **Next.js**       | Серверный рендеринг и API routes, клиент-серверное взаимодействие       |
+| **TypeScript**    | Статическая типизация для безопасности и автокомплита                   |
+| **Redux Toolkit** | Глобальное хранилище для управления состоянием поиска и постов          |
+| **React Query**   | Фетчинг и кеширование постов с пагинацией                               |
+| **Ant Design**    | UI-компоненты (карточки, теги, лоадеры, инпуты и пр.)                   |
+| **Tailwind**      | Стили и кастомизация UI-компонентов (я привык работать с ним)           |
+| **FSD**           | Разделение приложения на слои (entities, features, shared, pages и т.п.)|
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧱 Архитектура (FSD)
 
-## Learn More
+Проект использует **Feature-Sliced Design**. Я использовал эту архитектуру, потому что не нашел в вакансии какая архитектура используется в вашем проекте или компании. Основные слои:
+src/
+│
+├── app/ # Инициализация (Redux store, layout, globals, pages)
+│
+├── entities/ # Базовые сущности, не зависящие от бизнес-логики
+│ └── post/ # UI, типы, слайсы для постов
+│
+├── features/ # Отдельные фичи: поиск, сортировка, фильтры
+│ └── search/ # Slice + UI для поискового инпута
+│
+├── shared/ # Утилиты, хуки, api, общие компоненты
+│ └── api/queries/ # React Query хуки
+│ └── hooks/ # Хуки (бесконечная прокрутка и пр.)
+│
+└── widgets/ # Комбинированные блоки (например, список постов)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
