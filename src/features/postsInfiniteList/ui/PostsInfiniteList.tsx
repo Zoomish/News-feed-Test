@@ -4,7 +4,7 @@ import { useGetPostsQuery } from "@/entities/post/model/postApi";
 import { Post } from "@/entities/post/types";
 import { PostCard } from "@/entities/post/ui/PostCard";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
-import { Flex, Spin } from "antd";
+import { Empty, Flex, Spin } from "antd";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -46,14 +46,18 @@ export const PostsInfiniteList = ({ initialPosts, total }: Props) => {
 
     return (
         <Flex vertical wrap={false} gap={"small"} className="max-w-[800px]">
-            {posts.map((post, index) => (
-                <div
-                    key={post.id}
-                    ref={index === posts.length - 1 ? lastRef : undefined}
-                >
-                    <PostCard post={post} />
-                </div>
-            ))}
+            {posts.length > 0 ? (
+                posts.map((post, index) => (
+                    <div
+                        key={post.id}
+                        ref={index === posts.length - 1 ? lastRef : undefined}
+                    >
+                        <PostCard post={post} />
+                    </div>
+                ))
+            ) : (
+                <Empty />
+            )}
             {isFetching && <Spin size="large" />}
         </Flex>
     );
