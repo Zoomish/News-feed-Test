@@ -1,7 +1,8 @@
 import { Post } from "@/entities/post/types";
 import { DislikeOutlined, EyeOutlined, LikeOutlined } from "@ant-design/icons";
-import { Card, Flex, Statistic, Tag } from "antd";
+import { Card, Flex, Statistic, Tag, Typography } from "antd";
 import Title from "antd/es/typography/Title";
+const { Text, Paragraph } = Typography;
 
 type Props = {
     post: Post;
@@ -11,7 +12,7 @@ export const PostCard = ({ post }: Props) => {
     return (
         <Card className="border rounded-2xl p-4 shadow-md hover:shadow-lg transition">
             <Flex justify="space-between">
-                <div className="flex flex-wrap gap-2 text-sm mb-3">
+                <Flex wrap gap={6}>
                     {post.tags.map((tag) => (
                         <Tag
                             key={tag}
@@ -20,22 +21,31 @@ export const PostCard = ({ post }: Props) => {
                             {tag}
                         </Tag>
                     ))}
-                </div>
+                </Flex>
                 <span>
                     <EyeOutlined /> {post.views}
                 </span>
             </Flex>
-            <Title level={2}>{post.title}</Title>
-            <p className="text-gray-700 line-clamp-3 mb-3">{post.body}</p>
-
-            <Flex>
+            <Title level={2} style={{ marginTop: 8 }}>
+                {post.title}
+            </Title>
+            <Paragraph
+                ellipsis={{
+                    rows: 3,
+                }}
+            >
+                {post.body}
+            </Paragraph>
+            <Flex gap={8}>
                 <Statistic
                     value={post.reactions.likes}
-                    prefix={<LikeOutlined size={5} />}
+                    valueStyle={{ fontSize: 15, color: "green" }}
+                    prefix={<LikeOutlined style={{ width: 15 }} />}
                 />
                 <Statistic
                     value={post.reactions.dislikes}
-                    prefix={<DislikeOutlined size={5} />}
+                    valueStyle={{ fontSize: 15, color: "red" }}
+                    prefix={<DislikeOutlined style={{ width: 15 }} />}
                 />
             </Flex>
         </Card>
