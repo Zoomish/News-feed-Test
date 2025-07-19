@@ -1,57 +1,54 @@
 "use client";
 
 import { RootState } from "@/app/store";
-import { useGetPostsQuery } from "@/entities/post/model/postApi";
-import { Post } from "@/entities/post/types";
+import { appendPosts, setPosts } from "@/entities/post/model/postsSlice";
 import { PostCard } from "@/entities/post/ui/PostCard";
+import { $axios } from "@/shared/api/axios";
 import { useAppDispatch } from "@/shared/hooks/useAppDispatch";
 import { useInfinityScroll } from "@/shared/hooks/useInfinityScroll";
 import { Empty, Flex, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-type Props = {
-    initialPosts: Post[];
-    total: number;
-};
+const LIMIT = 10;
 
-export const PostsInfiniteList: React.FC<Props> = ({
-    initialPosts,
-    total,
-}: Props) => {
-    const LIMIT = 10;
-
-    const [page, setPage] = useState(0);
-    const [posts, setPosts] = useState<Post[]>(initialPosts);
+export const PostsInfiniteList = () => {
     const dispatch = useAppDispatch();
-    const searchResults = useSelector(
-        (state: RootState) => state.search.results,
-    );
-    const allPosts = useSelector((state: RootState) => state.posts.allPosts);
+    const searchTerm = useSelector((state: RootState) => state.search.term);
+    const posts = useSelector((state: RootState) => state.posts.posts);
+    const total = useSelector((state: RootState) => state.posts.total);
+    const [page, setPage] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const skip = page * LIMIT;
+    const fetchPosts = async () => {
+        setIsLoading(true);
+        const skip = page * LIMIT;
+        const endpoint = searchTerm
+            ? `/posts/search?q=${encodeURIComponent(searchTerm)}`
+            : `/posts?limit=${LIMIT}&skip=${skip}`;
+        const { data } = await $axios.get(endpoint);
+        if (page === 0) {
+            dispatch(setPosts({ posts: data.posts, total: data.total }));
+        } else {
+            dispatch(appendPosts({ posts: data.posts }));
+        }
 
-    const { data, isFetching } = useGetPostsQuery(
-        { limit: LIMIT, skip },
-        { skip: page === 0 },
-    );
+        setIsLoading(false);
+    };
 
     useEffect(() => {
-        if (data?.posts?.length) {
-            setPosts((prev) => {
-                const newPosts = data.posts.filter(
-                    (post) => !prev.find((p) => p.id === post.id),
-                );
-                return [...prev, ...newPosts];
-            });
-        }
-    }, [data]);
+        setPage(0);
+    }, [searchTerm]);
+
+    useEffect(() => {
+        fetchPosts();
+    }, [page, searchTerm]);
 
     const hasMore = posts.length < total;
 
     const lastRef = useInfinityScroll({
         hasMore,
-        isLoading: isFetching,
+        isLoading,
         onLoadMore: () => setPage((prev) => prev + 1),
     });
 
@@ -69,7 +66,7 @@ export const PostsInfiniteList: React.FC<Props> = ({
             ) : (
                 <Empty />
             )}
-            {isFetching && <Spin size="large" />}
+            {isLoading && <Spin size="large" />}
         </Flex>
     );
 };
