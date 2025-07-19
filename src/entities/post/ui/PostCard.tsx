@@ -2,7 +2,7 @@ import { Post } from "@/entities/post/types";
 import { DislikeOutlined, EyeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Card, Flex, Statistic, Tag, Typography } from "antd";
 import Title from "antd/es/typography/Title";
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 type Props = {
     post: Post;
@@ -32,6 +32,7 @@ export const PostCard = ({ post }: Props) => {
             <Paragraph
                 ellipsis={{
                     rows: 3,
+                    expandable: true,
                 }}
             >
                 {post.body}
