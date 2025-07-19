@@ -47,7 +47,9 @@ export const PostsInfiniteList: React.FC<Props> = ({ initialPosts, total }) => {
 
     useEffect(() => {
         if (!data) return;
-        if (page === 1) {
+        if (page === 0 && searchTerm.length > 0) {
+            dispatch(setPosts({ posts: data.posts, total: data.total }));
+        } else if (page === 1) {
             dispatch(setPosts({ posts: data.posts, total: data.total }));
         } else if (page > 1) {
             dispatch(appendPosts({ posts: data.posts }));
