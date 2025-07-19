@@ -1,9 +1,10 @@
+import { RootState } from "@/app/store";
 import { Post } from "@/entities/post/types";
 import { setSearchTerm } from "@/features/search/model/searchSlice";
 import { DislikeOutlined, EyeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Card, Flex, Statistic, Tag, Typography } from "antd";
 import Title from "antd/es/typography/Title";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const { Paragraph } = Typography;
 
@@ -14,6 +15,9 @@ type Props = {
 export const PostCard: React.FC<Props> = ({ post }) => {
     const dispatch = useDispatch();
 
+    const searchTerm = useSelector((state: RootState) => state.search.term);
+    const searchType = useSelector((state: RootState) => state.search.type);
+
     const onTagClick = (tag: string) => {
         dispatch(setSearchTerm({ term: tag, type: "tag" }));
     };
@@ -22,15 +26,20 @@ export const PostCard: React.FC<Props> = ({ post }) => {
         <Card className="border rounded-2xl p-4 shadow-md hover:shadow-lg transition">
             <Flex justify="space-between">
                 <Flex wrap gap={6}>
-                    {post.tags.map((tag) => (
-                        <Tag
-                            key={tag}
-                            className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full cursor-pointer"
-                            onClick={() => onTagClick(tag)}
-                        >
-                            {tag}
-                        </Tag>
-                    ))}
+                    {post.tags.map((tag) => {
+                        const isActiveTag =
+                            searchType === "tag" && tag === searchTerm;
+                        return (
+                            <Tag
+                                key={tag}
+                                className="cursor-pointer"
+                                color={isActiveTag ? "purple" : "blue"}
+                                onClick={() => onTagClick(tag)}
+                            >
+                                {tag}
+                            </Tag>
+                        );
+                    })}
                 </Flex>
                 <span>
                     <EyeOutlined /> {post.views}
