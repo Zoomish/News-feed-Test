@@ -18,7 +18,7 @@ export const HeaderComponent = () => {
     };
 
     return (
-        <div className="p-4 border-b">
+        <div className="max-w-[800px]">
             <Input
                 placeholder="Поиск постов..."
                 onChange={(e) => handleSearch(e.target.value)}
