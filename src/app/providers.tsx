@@ -21,11 +21,18 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
                                 zIndex: 1,
                                 width: "100%",
                                 backgroundColor: "transparent",
+                                padding: "0 5%",
                             }}
                         >
                             <HeaderComponent />
                         </Header>
-                        <Content style={{ padding: "0 50px", marginTop: 64, minHeight: "100%" }}>
+                        <Content
+                            style={{
+                                padding: "0 5%",
+                                marginTop: 64,
+                                minHeight: "100%",
+                            }}
+                        >
                             {children}
                         </Content>
                     </Layout>

@@ -41,7 +41,7 @@ export const HeaderComponent: React.FC = () => {
     };
 
     return (
-        <Flex justify="center" gap={8} style={{ marginTop: 16 }}>
+        <Flex justify="center" gap={8} style={{ marginTop: 16 }} className="!shadow-xl">
             {search.type === "tag" && (
                 <Tag
                     className="cursor-pointer flex items-center"

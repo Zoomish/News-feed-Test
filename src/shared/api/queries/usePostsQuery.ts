@@ -20,14 +20,19 @@ export const usePostsQuery = ({
     enabled = true,
 }: UsePostsQueryParams) => {
     const skip = page * limit;
-    const endpoint =
-        searchType === "search"
-            ? `/posts/search?q=${encodeURIComponent(
-                  searchTerm,
-              )}&limit=${limit}&skip=${skip}`
-            : searchType === "tag"
-            ? `/posts/tag/${searchTerm}?limit=${limit}&skip=${skip}`
-            : `/posts?limit=${limit}&skip=${skip}`;
+    let endpoint = "";
+
+    if (searchType === "search" && searchTerm.length > 0) {
+        endpoint = `/posts/search?q=${encodeURIComponent(
+            searchTerm,
+        )}&limit=${limit}&skip=${skip}`;
+    } else if (searchType === "tag") {
+        endpoint = `/posts/tag/${encodeURIComponent(
+            searchTerm,
+        )}?limit=${limit}&skip=${skip}`;
+    } else {
+        endpoint = `/posts?limit=${limit}&skip=${skip}`;
+    }
 
     return useQuery<GetPostsResponse>({
         queryKey: ["posts", searchTerm, searchType, page],
