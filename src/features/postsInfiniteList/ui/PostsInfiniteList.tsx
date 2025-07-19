@@ -46,13 +46,15 @@ export const PostsInfiniteList: React.FC<Props> = ({
             setSkipInitial(false);
         }
     }, [searchTerm, searchType]);
+    console.log(searchType, searchTerm);
 
     const { data, isLoading } = usePostsQuery({
         page,
         limit: LIMIT,
         searchTerm,
         searchType,
-        enabled: !skipInitial,
+        enabled:
+            !skipInitial && !(searchType === "search" && searchTerm === ""),
     });
 
     useEffect(() => {

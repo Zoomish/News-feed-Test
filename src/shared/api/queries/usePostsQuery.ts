@@ -7,9 +7,9 @@ type GetPostsResponse = { posts: Post[]; total: number };
 type UsePostsQueryParams = {
     page: number;
     limit: number;
-    searchTerm?: string;
-    searchType?: string;
-    enabled?: boolean;
+    searchTerm: string;
+    searchType: string;
+    enabled: boolean;
 };
 
 export const usePostsQuery = ({
@@ -19,11 +19,12 @@ export const usePostsQuery = ({
     searchType,
     enabled = true,
 }: UsePostsQueryParams) => {
-    const endpoint = searchTerm
-        ? `/posts/search?q=${encodeURIComponent(searchTerm)}`
-        : searchType
-        ? `/posts/tag/${searchType}`
-        : `/posts?limit=${limit}&skip=${page * limit}`;
+    const endpoint =
+        searchType === "search"
+            ? `/posts/search?q=${encodeURIComponent(searchTerm)}`
+            : searchType === "tag"
+            ? `/posts/tag/${searchTerm}`
+            : `/posts?limit=${limit}&skip=${page * limit}`;
 
     return useQuery<GetPostsResponse>({
         queryKey: ["posts", searchTerm, searchType, page],
@@ -31,6 +32,6 @@ export const usePostsQuery = ({
             const { data } = await $axios.get(endpoint);
             return data;
         },
-        enabled, // используем enabled из параметров
+        enabled,
     });
 };
