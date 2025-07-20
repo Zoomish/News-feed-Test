@@ -60,7 +60,7 @@ export const PostsInfiniteList: React.FC<Props> = ({
         } else if (page > 1) {
             dispatch(appendPosts({ posts: data.posts }));
         }
-    }, [data, dispatch, page, searchTerm, posts]);
+    }, [data, dispatch, page, searchTerm]);
 
     const hasMore = posts.length < total;
 

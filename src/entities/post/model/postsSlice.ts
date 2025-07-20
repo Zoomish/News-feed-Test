@@ -23,7 +23,12 @@ const postsSlice = createSlice({
             state.total = action.payload.total;
         },
         appendPosts(state, action: PayloadAction<{ posts: Post[] }>) {
-            state.posts = [...state.posts, ...action.payload.posts];
+            const newPosts = action.payload.posts;
+            const existingIds = new Set(state.posts.map((p) => p.id));
+            const filteredPosts = newPosts.filter(
+                (p) => !existingIds.has(p.id),
+            );
+            state.posts = [...state.posts, ...filteredPosts];
         },
     },
 });
